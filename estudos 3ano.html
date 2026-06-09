@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudos 3.º Ano</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,400&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1f2435;
+    --border: #2a3045;
+    --text: #e8eaf0;
+    --muted: #7a82a0;
+    --accent: #5b8dee;
+    --accent-dim: rgba(91,141,238,0.12);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.12);
+    --red: #f55f5f;
+    --red-dim: rgba(245,95,95,0.12);
+    --yellow: #f5c542;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  #app { display: flex; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-header h1 {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .sidebar-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .nav-list { padding: 8px 8px; flex: 1; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    user-select: none;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .nav-score {
+    margin-left: auto;
+    font-size: 11px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 20px;
+    color: var(--muted);
+  }
+  .nav-item.active .nav-score { background: var(--accent-dim); }
+  .nav-score.perfect { background: var(--green-dim); color: var(--green); }
+
+  /* ── MAIN ── */
+  #main {
+    flex: 1;
+    padding: 32px 28px;
+    max-width: 820px;
+    overflow-y: auto;
+  }
+
+  .subject-title {
+    font-family: 'Lora', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .subject-subtitle {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-color: var(--accent); }
+
+  /* ── CONTEÚDO ── */
+  .content { display: none; }
+  .content.visible { display: block; }
+
+  .section-block { margin-bottom: 28px; }
+
+  .section-h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin: 16px 0 8px;
+  }
+  .section-p { color: var(--text); margin-bottom: 10px; }
+
+  .bullet-list { list-style: none; padding: 0; margin: 8px 0; }
+  .bullet-list li {
+    padding: 4px 0 4px 20px;
+    position: relative;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .bullet-list li::before {
+    content: '›';
+    position: absolute;
+    left: 4px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .example {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: var(--muted);
+    margin: 6px 0;
+    font-style: italic;
+  }
+
+  /* ── QUESTÕES ── */
+  .question-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .question-block.answered-correct { border-color: var(--green); }
+  .question-block.answered-wrong { border-color: var(--red); }
+
+  .question-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .question-text {
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .alternatives { display: flex; flex-direction: column; gap: 8px; }
+
+  .alt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .alt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-dim); }
+  .alt-btn:disabled { cursor: default; }
+
+  .alt-letter {
+    font-weight: 700;
+    font-size: 13px;
+    min-width: 20px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .alt-btn.correct { border-color: var(--green); background: var(--green-dim); }
+  .alt-btn.correct .alt-letter { color: var(--green); }
+  .alt-btn.wrong { border-color: var(--red); background: var(--red-dim); }
+  .alt-btn.wrong .alt-letter { color: var(--red); }
+  .alt-btn.reveal-correct { border-color: var(--green); background: var(--green-dim); opacity: 0.7; }
+  .alt-btn.reveal-correct .alt-letter { color: var(--green); }
+
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--green-dim); border: 1px solid rgba(62,207,142,0.3); }
+  .feedback.wrong { background: var(--red-dim); border: 1px solid rgba(245,95,95,0.3); }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .feedback.correct strong { color: var(--green); }
+  .feedback.wrong strong { color: var(--red); }
+
+  /* ── SCORE BAR ── */
+  .score-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .score-label { font-size: 13px; color: var(--muted); }
+  .score-count { font-size: 22px; font-weight: 700; color: var(--text); }
+  .score-count span { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .progress-bar-wrap { flex: 1; background: var(--surface2); border-radius: 4px; height: 6px; }
+  .progress-bar-fill {
+    height: 6px;
+    border-radius: 4px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+  .reset-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--text); }
+
+  /* ── MOBILE ── */
+  #menu-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(91,141,238,0.4);
+  }
+
+  @media (max-width: 700px) {
+    #sidebar {
+      position: fixed;
+      left: -260px;
+      top: 0;
+      bottom: 0;
+      z-index: 50;
+      transition: left 0.25s ease;
+    }
+    #sidebar.open { left: 0; box-shadow: 4px 0 30px rgba(0,0,0,0.5); }
+    #main { padding: 20px 16px; }
+    #menu-toggle { display: flex; align-items: center; justify-content: center; }
+    .subject-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <h1>Estudos<br>3.º Ano</h1>
+      <p>Selecione uma matéria</p>
+    </div>
+    <div class="nav-list" id="nav-list"></div>
+  </nav>
+
+  <main id="main"></main>
+</div>
+
+<button id="menu-toggle" onclick="toggleMenu()">☰</button>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DADOS
+// ═══════════════════════════════════════════════════════════════
+
+const MATERIAS = [
+  {
+    id: "port",
+    icon: "📝",
+    nome: "Língua Portuguesa",
+    topico: "Aposto, Vocativo e Funções do 'Que'",
+    conteudo: [
+      {
+        h2: "1. APOSTO",
+        items: [
+          { tipo: "p", txt: "O aposto é um termo acessório que se refere a um substantivo, pronome ou expressão já enunciada, acrescentando explicação, denominação, enumeração ou resumo. Pode ser removido sem comprometer a sintaxe da frase." },
+          { tipo: "h3", txt: "Classificação dos Apostos" },
+          { tipo: "ul", items: [
+            "Explicativo: explica ou esclarece o termo anterior. Vem entre vírgulas, travessões ou parênteses.",
+            "Enumerativo: enumera ou especifica elementos do termo anterior.",
+            "Resumitivo: resume elementos anteriormente enumerados. Introduzido por 'tudo', 'nada', 'ninguém'.",
+            "Especificativo: delimita o sentido de um termo genérico. Não recebe pontuação.",
+            "Distributivo: distribui e relaciona elementos de um conjunto."
+          ]},
+          { tipo: "ex", txt: "Ex.: Machado de Assis, grande romancista brasileiro, nasceu no Rio. (explicativo)" },
+          { tipo: "ex", txt: "Ex.: O escritor Graciliano Ramos retratou o sertão. (especificativo — sem pontuação)" },
+        ]
+      },
+      {
+        h2: "2. VOCATIVO",
+        items: [
+          { tipo: "p", txt: "Termo independente da estrutura sintática — não integra sujeito nem predicado. Serve para chamar ou interpelar diretamente o interlocutor. Sempre separado por vírgula." },
+          { tipo: "h3", txt: "Atenção à vírgula" },
+          { tipo: "ex", txt: "'Vamos comer filhos!' (canibais) × 'Vamos comer, filhos!' (jantar em família)" },
+          { tipo: "ul", items: [
+            "Início: 'Alunos, prestem atenção!'",
+            "Meio: 'Prestem, alunos, atenção!'",
+            "Fim: 'Prestem atenção, alunos!'"
+          ]}
+        ]
+      },
+      {
+        h2: "3. FUNÇÕES DO 'QUE'",
+        items: [
+          { tipo: "ul", items: [
+            "Conjunção Subordinativa Integrante: introduz oração substantiva. Substituível por 'o fato de'.",
+            "Pronome Relativo: retoma antecedente, introduz oração adjetiva. Substituível por 'o qual'.",
+            "Pronome Interrogativo: aparece em perguntas diretas ou indiretas.",
+            "Advérbio de Intensidade: diante de adjetivos/advérbios. Ex.: 'Que lindo dia!'",
+            "Partícula Expletiva: sem função sintática. Pode ser retirado sem alterar o sentido.",
+            "Conjunção Coordenativa Aditiva: equivale a 'e' em estruturas paralelas.",
+            "Interjeição: expressa emoção. Ex.: 'Que! Você ainda está aqui?'",
+            "Substantivo: antecedido de artigo. Ex.: 'Não ouvi um que sequer.'"
+          ]},
+          { tipo: "ex", txt: "Integrante: 'Espero que venhas.' → Espero o fato de vieres." },
+          { tipo: "ex", txt: "Relativo: 'O livro que comprei.' → O livro o qual comprei." },
+          { tipo: "ex", txt: "Expletivo: 'Há anos que não o via.' → Há anos não o via." },
+        ]
+      }
+    ],
+    questoes: [
+      { q: "Assinale a alternativa com APOSTO EXPLICATIVO:", alts: ["O romancista Machado de Assis é o maior escritor brasileiro.", "Pedro — meu melhor amigo — viajou para a Europa.", "Dois sonhos o moviam: a fama e a riqueza.", "Vamos comer, crianças!", "O que ele queria era paz."], g: "B", j: "Em 'Pedro — meu melhor amigo —', o trecho entre travessões explica quem é Pedro. A letra A tem aposto especificativo (sem pontuação). A letra C tem aposto enumerativo." },
+      { q: "Em 'Tudo lhe faltava: coragem, dinheiro, esperança.' O aposto classifica-se como:", alts: ["Explicativo", "Resumitivo", "Enumerativo", "Distributivo", "Especificativo"], g: "C", j: "O aposto enumera os elementos que compõem o 'tudo' citado. É aposto enumerativo." },
+      { q: "Identifique o vocativo em: 'Senhoras e senhores, o espetáculo vai começar.'", alts: ["o espetáculo", "vai começar", "Senhoras e senhores", "vai", "começar"], g: "C", j: "'Senhoras e senhores' interpela diretamente o interlocutor, está separado por vírgula e não integra a estrutura sintática da oração." },
+      { q: "Em 'O livro que comprei está na mesa.', o 'que' exerce função de:", alts: ["Conjunção subordinativa integrante", "Pronome relativo", "Partícula expletiva", "Conjunção coordenativa", "Pronome indefinido"], g: "B", j: "'Que' retoma 'livro' e introduz oração subordinada adjetiva, exercendo função de objeto direto ('comprei o livro'). Substituível por 'o qual'." },
+      { q: "Em 'Espero que tudo se resolva.', o 'que' é:", alts: ["Pronome relativo", "Conjunção subordinativa integrante", "Pronome interrogativo", "Partícula expletiva", "Conjunção coordenativa aditiva"], g: "B", j: "Introduz oração subordinada substantiva objetiva direta. Substituível por 'o fato de': 'Espero o fato de tudo se resolver.'" },
+      { q: "Assinale a alternativa em que o 'que' é partícula expletiva:", alts: ["Que horas são?", "Já faz tempo que não nos vemos.", "O aluno que estudou passou.", "Quero que venhas logo.", "Que livro interessante!"], g: "B", j: "Em 'Já faz tempo que não nos vemos', o 'que' pode ser retirado sem alterar o sentido. É partícula expletiva ou de realce." },
+      { q: "Em 'Que absurdo você fez!', o 'que' é classificado como:", alts: ["Pronome relativo", "Conjunção integrante", "Pronome indefinido/exclamativo", "Partícula expletiva", "Advérbio de intensidade"], g: "C", j: "No contexto exclamativo, 'que' funciona como pronome indefinido/exclamativo. Equivale a 'que coisa absurda!'." },
+      { q: "O 'que' exerce função de ADVÉRBIO DE INTENSIDADE em:", alts: ["O que você quer?", "Que livro adorável!", "É preciso que você leia.", "O homem que veio era estranho.", "Há dois anos que não fumo."], g: "B", j: "'Que livro adorável!' — o 'que' intensifica o adjetivo, equivalendo a 'quão adorável é este livro!'. Funciona como advérbio de intensidade." },
+      { q: "Aposto distributivo está presente em:", alts: ["Machado de Assis, o bruxo do Cosme Velho, foi genial.", "Dois grupos: uns queriam partir, outros preferiam ficar.", "Três qualidades o definiam: bondade, paciência e sabedoria.", "O poeta Fernando Pessoa escreveu sob heterônimos.", "Tudo se perdeu: tempo, dinheiro, esperança."], g: "B", j: "O aposto distributivo distribui características entre os elementos do conjunto. 'Uns...outros' distribui papéis entre os dois grupos." },
+      { q: "Qual NÃO é função do 'que' na língua portuguesa?", alts: ["Pronome relativo", "Conjunção integrante", "Preposição isolada sem contexto", "Partícula expletiva", "Advérbio de intensidade"], g: "C", j: "'Que' nunca é preposição isolada. Pode integrar locuções prepositivas como 'antes que', mas aí funciona como conjunção. As demais são funções legítimas do 'que'." },
+      { q: "(FUVEST) Em 'Há anos que não vejo minha cidade natal.', o 'que':", alts: ["É conjunção integrante, introduzindo oração completiva.", "É pronome relativo referindo-se a 'anos'.", "É partícula expletiva, sem função sintática.", "É conjunção coordenativa explicativa.", "É pronome interrogativo indireto."], g: "C", j: "O 'que' nessa construção não exerce função sintática identificável — é expletivo. A frase tem mesmo sentido sem ele: 'Há anos não vejo minha cidade natal.'" }
+    ]
+  },
+  {
+    id: "hist1",
+    icon: "🏛️",
+    nome: "História 1",
+    topico: "Governo Joanino e Primeiro Reinado",
+    conteudo: [
+      {
+        h2: "1. GOVERNO JOANINO (1808–1821)",
+        items: [
+          { tipo: "p", txt: "Em 1808, ameaçado por Napoleão (Bloqueio Continental), D. João VI transferiu a Corte para o Brasil, escoltado por navios britânicos. Foi o início de uma transformação profunda da colônia." },
+          { tipo: "h3", txt: "Principais Medidas" },
+          { tipo: "ul", items: [
+            "Abertura dos Portos às Nações Amigas (1808): rompeu com o pacto colonial, beneficiando especialmente a Inglaterra.",
+            "Criação do Banco do Brasil (1808).",
+            "Elevação do Brasil a Reino Unido de Portugal, Brasil e Algarves (1815).",
+            "Tratados de 1810: tarifas de 12% para produtos ingleses (vs 24% para outros países).",
+            "Missão Artística Francesa (1816): Debret, Grandjean de Montigny — fundação da Academia de Belas Artes.",
+            "Revolução Constitucionalista do Porto (1820): exigiu retorno de D. João a Portugal."
+          ]}
+        ]
+      },
+      {
+        h2: "2. INDEPENDÊNCIA (1820–1822)",
+        items: [
+          { tipo: "ul", items: [
+            "Dia do Fico (9 de janeiro de 1822): D. Pedro recusa voltar a Portugal — primeiro ato de ruptura.",
+            "Grito do Ipiranga (7 de setembro de 1822): 'Independência ou Morte!'",
+            "Independência conservadora: sem ruptura social — escravidão e latifúndio mantidos.",
+            "Reconhecimento por Portugal em 1825: indenização de 2 milhões de libras."
+          ]}
+        ]
+      },
+      {
+        h2: "3. PRIMEIRO REINADO (1822–1831)",
+        items: [
+          { tipo: "ul", items: [
+            "Constituição de 1824 (outorgada): criou o Poder Moderador — 4º poder exclusivo do imperador.",
+            "Confederação do Equador (1824): revolta nordestina republicano-federalista, liderada por Frei Caneca. Reprimida.",
+            "Guerra da Cisplatina (1825–1828): perda do Uruguai — desgaste militar e político.",
+            "Noite das Garrafadas (1831): conflito entre brasileiros e portugueses no Rio.",
+            "Abdicação (7 de abril de 1831): D. Pedro I abdica em favor do filho de 5 anos — início do Período Regencial."
+          ]}
+        ]
+      }
+    ],
+    questoes: [
+      { q: "A Abertura dos Portos (1808) foi considerada 'primeiro ato de emancipação' porque:", alts: ["Declarou a independência do Brasil.", "Rompeu com o pacto colonial ao permitir comércio direto com outras nações.", "Expulsou comerciantes portugueses.", "Criou o Banco do Brasil.", "Concedeu autonomia às províncias."], g: "B", j: "O pacto colonial impunha que toda produção passasse pela metrópole. A Abertura rompeu esse monopólio, permitindo comércio direto — sobretudo com a Inglaterra — abalando a lógica colonial." },
+      { q: "A elevação do Brasil a Reino Unido (1815) tornou inconstitucional:", alts: ["A abolição da escravidão nas colônias.", "A transferência definitiva da capital para o Rio.", "Qualquer tentativa posterior de recolonização do Brasil.", "A criação de uma constituição liberal.", "O reconhecimento da independência."], g: "C", j: "Ao equiparar o Brasil à metrópole juridicamente, D. João tornou ilegítima qualquer tentativa de recolonização — o que ficou evidente quando as Cortes tentaram reverter a situação após 1820." },
+      { q: "O 'Dia do Fico' (9 de janeiro de 1822) representou:", alts: ["A proclamação oficial da Independência.", "A dissolução da Assembleia Constituinte.", "A decisão de D. Pedro de permanecer no Brasil, contrariando as Cortes portuguesas.", "A assinatura do Tratado de Reconhecimento.", "A fundação do Partido Liberal."], g: "C", j: "As Cortes exigiram o retorno de D. Pedro. Apoiado pela elite que temia a recolonização, ele recusou com 'Fico!'. Sinalizou a ruptura política — sete meses antes do Grito do Ipiranga." },
+      { q: "A Constituição de 1824 era centralizadora principalmente devido:", alts: ["Ao parlamentarismo puro.", "À abolição da escravidão.", "Ao Poder Moderador, exclusivo do imperador.", "À proibição de partidos.", "Ao sufrágio universal."], g: "C", j: "O Poder Moderador concentrava nas mãos do imperador a capacidade de intervir nos três poderes: nomear ministros, dissolver a Câmara, suspender magistrados. D. Pedro I era árbitro supremo da política." },
+      { q: "A Confederação do Equador (1824) evidenciou:", alts: ["Apoio popular à Constituição outorgada.", "Insatisfação nordestina com o centralismo e autoritarismo de D. Pedro I.", "Tentativa de restaurar o domínio português no Nordeste.", "Conflito entre cafeicultores e senhores de engenho.", "Influência da Revolução Industrial no Brasil."], g: "B", j: "Liderada por Frei Caneca em Pernambuco, propunha república federalista. Nasceu da rejeição à Constituição outorgada e refletia o descontentamento das elites nordestinas com o poder concentrado no Rio." },
+      { q: "A perda da Cisplatina (1828) contribuiu para a crise do Primeiro Reinado porque:", alts: ["Forçou D. Pedro a aumentar impostos.", "Demonstrou fraqueza militar e gerou desgaste político para D. Pedro.", "Resultou na invasão argentina do sul.", "Provocou ruptura com o Partido Conservador.", "Levou à suspensão da Constituição."], g: "B", j: "Guerra longa, dispendiosa e terminada com a independência do Uruguai. A derrota fragilizou D. Pedro perante o Exército e a elite, acelerando o processo que culminou na abdicação de 1831." },
+      { q: "A Revolução do Porto (1820) foi determinante para a independência porque:", alts: ["Declarou guerra ao Brasil.", "Exigiu retorno de D. João e ameaçou reverter as conquistas do período joanino.", "Promulgou constituição liberal que serviu de modelo.", "Provocou nova fuga da família real.", "Reconheceu a independência antes de sua proclamação."], g: "B", j: "As Cortes de Lisboa exigiram o retorno de D. João, a recolonização e a anulação das medidas de 1808. Essa ameaça galvanizou as elites brasileiras em torno da independência." },
+      { q: "A Missão Artística Francesa (1816) é corretamente associada a:", alts: ["Imposição de Napoleão como condição de paz.", "Debret e Grandjean de Montigny, que fundaram a Academia de Belas Artes e introduziram o neoclassicismo.", "Produção de mapas cartográficos do Brasil.", "Criação do Banco do Brasil.", "Registro exclusivo das riquezas naturais."], g: "B", j: "D. João VI convidou artistas franceses para desenvolver as artes no Brasil. Debret registrou a sociedade colonial; Grandjean projetou edificações. Fundaram a Academia Imperial de Belas Artes e introduziram a estética neoclássica." },
+      { q: "A independência brasileira é classificada como 'conservadora' porque:", alts: ["Foi conquistada por guerra contra Portugal.", "Resultou em república igualitária.", "Manteve as estruturas coloniais: escravidão, latifúndio e hierarquia social.", "Aboliu privilégios da Igreja Católica.", "Promoveu ampla participação popular."], g: "C", j: "Diferentemente de revoluções liberais europeias, a independência foi conduzida pelas elites e preservou a escravidão, a grande propriedade e a monarquia. Não houve ruptura social, apenas política." },
+      { q: "Os Tratados de 1810 beneficiaram principalmente:", alts: ["Artesãos e manufatureiros brasileiros.", "Produtores de açúcar do Nordeste.", "A Grã-Bretanha, com tarifas privilegiadas e acesso ao mercado brasileiro.", "Escravizados.", "A Coroa Portuguesa."], g: "C", j: "Produtos britânicos pagavam 15% de imposto no Brasil; portugueses, 16%; demais, 24%. Isso abriu o mercado brasileiro à hegemonia comercial britânica em troca do apoio inglês à transferência da Corte." },
+      { q: "O principal motivo da abdicação de D. Pedro I (1831) foi:", alts: ["Pressão da Igreja Católica.", "Derrota militar na guerra contra a Colômbia.", "Acumulação de crises econômicas, políticas e militares que o isolaram.", "Descoberta de ouro em Minas.", "Proclamação da república pelo Exército."], g: "C", j: "Crise econômica, perda da Cisplatina, envolvimento na política portuguesa, dissolução da Constituinte e repressão a movimentos como a Confederação do Equador afastaram o Exército e as elites. A Noite das Garrafadas sinalizou o esgotamento." }
+    ]
+  },
+  {
+    id: "hist2",
+    icon: "👑",
+    nome: "História 2",
+    topico: "Absolutismo e Humanismo Renascentista",
+    conteudo: [
+      {
+        h2: "1. ABSOLUTISMO",
+        items: [
+          { tipo: "p", txt: "Sistema político (séculos XVI–XVIII) com concentração total de poder nas mãos do monarca — sem limitações constitucionais efetivas." },
+          { tipo: "h3", txt: "Teóricos" },
+          { tipo: "ul", items: [
+            "Maquiavel (O Príncipe, 1513): separou política da moral. Eficácia acima de tudo — razão de Estado.",
+            "Hobbes (Leviatã, 1651): estado de natureza = guerra de todos contra todos. Contrato social cede direitos a soberano absoluto e irrevogável.",
+            "Bossuet (séc. XVII): poder do rei vem diretamente de Deus. Questionar o rei é questionar Deus."
+          ]},
+          { tipo: "ul", items: [
+            "Exércitos permanentes e burocracia centralizada.",
+            "Mercantilismo: acumular metais preciosos em benefício do Estado.",
+            "Direito divino dos reis."
+          ]}
+        ]
+      },
+      {
+        h2: "2. TRANSIÇÃO MEDIEVAL → MODERNA",
+        items: [
+          { tipo: "ul", items: [
+            "Peste Negra (1347–1353): matou 30–60% da Europa, enfraqueceu o feudalismo.",
+            "Crise da Igreja Católica: Cisma do Ocidente, corrupção eclesiástica.",
+            "Crescimento das cidades e do comércio: burgueses acumulam capital.",
+            "Expansão Marítima: rotas intercontinentais, fluxo de riquezas.",
+            "Centralização política: reis + burguesia contra nobreza feudal."
+          ]}
+        ]
+      },
+      {
+        h2: "3. HUMANISMO RENASCENTISTA",
+        items: [
+          { tipo: "p", txt: "Movimento cultural (séculos XIV–XVI) que recolocou o ser humano no centro do pensamento, redescobriu os clássicos greco-romanos e valorizou a razão." },
+          { tipo: "ul", items: [
+            "Antropocentrismo: o humano substitui Deus no centro do universo intelectual.",
+            "Racionalismo e empirismo nascente: observação da natureza como fonte de conhecimento.",
+            "Itália (Florença): Médici financiavam Leonardo da Vinci, Michelangelo, Rafael.",
+            "Norte da Europa: Erasmo de Rotterdam, Thomas More — crítica às instituições.",
+            "Invenção da imprensa (Gutenberg, c. 1450): democratizou o acesso ao conhecimento."
+          ]},
+          { tipo: "ex", txt: "Queda de Constantinopla (1453): sábios gregos fugiram para a Itália trazendo textos clássicos — catalisador do Renascimento." }
+        ]
+      }
+    ],
+    questoes: [
+      { q: "A principal tese de Hobbes no 'Leviatã' para justificar o absolutismo era:", alts: ["O poder do rei deriva diretamente de Deus.", "O governante deve agir com eficácia, mesmo que imoral.", "Os indivíduos cedem direitos naturais a um soberano absoluto para escapar da guerra de todos contra todos.", "A nobreza deve compartilhar o poder com o rei.", "O Estado deve regular a economia para acumular riquezas."], g: "C", j: "Hobbes argumenta que no estado de natureza a vida é 'solitária, pobre, sórdida, brutal e curta'. Para superar isso, homens firmam contrato cedendo direitos a soberano irrevogável. Difere de Bossuet por usar argumento racional, não teológico." },
+      { q: "Bossuet difere de Hobbes na fundamentação do absolutismo porque:", alts: ["Bossuet defende monarquia constitucional.", "Bossuet baseia o poder real na vontade divina; Hobbes, no contrato social racional.", "Bossuet critica o absolutismo.", "Bossuet é favorável à república.", "Ambos têm fundamentos idênticos."], g: "B", j: "Bossuet fundamenta o absolutismo pelo direito divino. Hobbes o justifica racionalmente pelo contrato social. São fundamentos opostos — teológico vs. racional." },
+      { q: "'O fim justifica os meios', associada a Maquiavel, está ligada ao princípio de que:", alts: ["O governante deve seguir a monarquia teocrática.", "A política deve ser guiada pela eficácia prática, independente de julgamentos morais.", "Maquiavel propôs abolir a corrupção.", "O governante deve sempre agir com bondade.", "O contrato social justifica qualquer ação estatal."], g: "B", j: "Maquiavel separa a política da ética religiosa medieval. O governante deve agir com pragmatismo — força ou diplomacia conforme necessário — para manter o poder e a estabilidade do Estado." },
+      { q: "A Peste Negra contribuiu para a transição feudal-capitalista porque:", alts: ["Destruiu rotas mediterrâneas.", "A mortalidade elevada fez os camponeses sobreviventes negociarem melhores condições, abalando as relações servis.", "Fortaleceu a Igreja Católica.", "Levou à centralização política imediata.", "Foi provocada pelos burgueses."], g: "B", j: "Com a drástica redução da mão de obra, senhores feudais foram obrigados a oferecer melhores condições para atrair trabalhadores. Isso enfraqueceu gradualmente o feudalismo e contribuiu para a mobilidade social da modernidade." },
+      { q: "O Humanismo Renascentista representou ruptura com a Idade Média ao:", alts: ["Negar a existência de Deus.", "Substituir o teocentrismo pelo antropocentrismo.", "Rejeitar a herança greco-romana.", "Defender o retorno ao feudalismo.", "Proibir o estudo das ciências naturais."], g: "B", j: "O teocentrismo medieval colocava Deus no centro de toda explicação. O Humanismo deslocou esse centro para o ser humano — sua razão, criatividade e capacidade de compreender e transformar o mundo." },
+      { q: "A aliança entre burguesia e monarquia nos Estados modernos beneficiou ambas porque:", alts: ["A burguesia assumiu o controle político.", "A monarquia obteve financiamento; a burguesia, proteção militar, estabilidade jurídica e mercados.", "Os burgueses tornaram-se nobres.", "A Igreja mediou a aliança.", "A burguesia financiou as cruzadas."], g: "B", j: "A burguesia precisava de segurança para o comércio (estradas, moeda, leis). Os reis precisavam de recursos para manter exércitos e burocracia. Foi uma aliança de interesses convergentes que desgastou a nobreza feudal." },
+      { q: "A imprensa de Gutenberg (c. 1450) foi decisiva para o Renascimento porque:", alts: ["Substituiu o latim pelas línguas vernáculas.", "Permitiu reprodução em larga escala, democratizando o acesso ao conhecimento e acelerando a difusão humanista.", "Criou propaganda a serviço das monarquias.", "Extinguiu manuscritos religiosos.", "Tornou obrigatório o ensino da leitura."], g: "B", j: "Antes, livros eram manuscritos, raros e caros. Gutenberg permitiu produção em massa a custos menores, sendo fundamental para a difusão humanista, da Reforma Protestante e, depois, da Revolução Científica." },
+      { q: "O mercantilismo tinha como objetivo central:", alts: ["Distribuir riquezas igualmente.", "Garantir balança comercial favorável e acumular metais preciosos para fortalecer o Estado.", "Promover o livre-comércio entre nações.", "Eliminar a produção artesanal.", "Transferir controle econômico para a burguesia."], g: "B", j: "O mercantilismo entendia a riqueza como finita. O Estado devia maximizar exportações e minimizar importações para acumular ouro e prata — justificando o colonialismo e os monopólios comerciais típicos do período." },
+      { q: "A queda de Constantinopla (1453) contribuiu para o Renascimento porque:", alts: ["Gerou fluxo de sábios gregos para a Europa Ocidental, trazendo textos clássicos.", "Abriu rota terrestre para a China.", "Causou unificação dos principados italianos.", "Destruiu manuscritos árabes.", "Levou à criação da Inquisição."], g: "A", j: "Com a conquista otomana, intelectuais gregos fugiram para a Itália levando textos clássicos originais. O contato com o pensamento grego antigo — especialmente Platão — foi catalisador do Humanismo italiano." },
+      { q: "O Humanismo nórdico (Erasmo, Thomas More) diferia do italiano porque:", alts: ["O nórdico rejeitava a religião cristã.", "O nórdico tinha caráter mais crítico às instituições religiosas e políticas; o italiano enfatizava artes e filosofia.", "O italiano era exclusivamente científico.", "O nórdico defendia o retorno ao feudalismo.", "Não há diferença entre os dois."], g: "B", j: "O Humanismo italiano focava na arte, filosofia e redescoberta dos clássicos. O nórdico, com Erasmo ('Elogio da Loucura') e More ('Utopia'), tinha feição reformadora — criticava a corrupção da Igreja e a desigualdade. Preparou o terreno para a Reforma Protestante." },
+      { q: "O absolutismo e o feudalismo eram incompatíveis porque:", alts: ["O feudalismo concentrava poder em um único soberano.", "O absolutismo propunha extinção da propriedade privada.", "O feudalismo era descentralizado (poder nos nobres locais); o absolutismo concentrava toda autoridade no rei.", "O feudalismo praticava o livre-comércio.", "São modelos compatíveis."], g: "C", j: "O feudalismo fragmentava o poder: cada senhor tinha jurisdição, exércitos e tributos. O absolutismo impôs a soberania única do rei sobre todo o território. A burguesia foi aliada fundamental nessa transição." }
+    ]
+  },
+  {
+    id: "geo1",
+    icon: "🌎",
+    nome: "Geografia 1",
+    topico: "Climatologia: Ciclones, El Niño, Chuvas e Massas de Ar",
+    conteudo: [
+      {
+        h2: "1. CICLONES",
+        items: [
+          { tipo: "p", txt: "Sistemas atmosféricos de baixa pressão com ventos convergindo em espiral. Giro anti-horário no HN e horário no HS (Força de Coriolis)." },
+          { tipo: "ul", items: [
+            "Ciclone tropical: sobre oceanos quentes (>26°C). Devastador. Furacão (Atlântico), tufão (Pacífico NW), ciclone (Índico).",
+            "Ciclone extratropical: latitudes médias, interação de massas quente/fria.",
+            "Anticiclone: oposto — alta pressão, ventos divergentes, tempo estável e seco."
+          ]}
+        ]
+      },
+      {
+        h2: "2. EL NIÑO E LA NIÑA (ENOS)",
+        items: [
+          { tipo: "h3", txt: "El Niño" },
+          { tipo: "p", txt: "Ventos alísios enfraquecem → água quente acumula no Pacífico Leste." },
+          { tipo: "ul", items: ["Norte/Nordeste do Brasil: seca intensa.", "Sul/Sudeste: chuvas acima da média, enchentes.", "Amazônia: aumento do risco de incêndios."] },
+          { tipo: "h3", txt: "La Niña" },
+          { tipo: "p", txt: "Ventos alísios se intensificam → Pacífico Leste mais frio." },
+          { tipo: "ul", items: ["Norte/Nordeste: chuvas acima da média.", "Sul: seca e frio mais intensos.", "Efeitos mais prolongados que o El Niño."] }
+        ]
+      },
+      {
+        h2: "3. TIPOS DE CHUVA",
+        items: [
+          { tipo: "ul", items: [
+            "Convectiva: aquecimento local → ar sobe, condensa, precipita. Intensa, curta, à tarde. Típica da Amazônia e Centro-Oeste.",
+            "Orográfica (relevo): massa úmida encontra montanha → sobe → condensa no barlavento. Serra do Mar e Serra Gaúcha.",
+            "Frontal (ciclonal): encontro de massas com temperaturas diferentes. Duradoura. Sul e Sudeste do Brasil."
+          ]}
+        ]
+      },
+      {
+        h2: "4. MASSAS DE AR DO BRASIL",
+        items: [
+          { tipo: "ul", items: [
+            "mEc (Equatorial Continental): Amazônia, quente e úmida. Chuvas abundantes. Atua no verão em grande parte do Brasil.",
+            "mEa (Equatorial Atlântica): Atlântico Norte, quente e úmida. Litoral Norte/Nordeste.",
+            "mTa (Tropical Atlântica): Atlântico Sul subtropical, quente e úmida. Principal responsável pelas chuvas do Sudeste e Nordeste Leste.",
+            "mTc (Tropical Continental): Chaco, quente e seca. Ondas de calor no Centro-Oeste e Sudeste.",
+            "mPa (Polar Atlântica): extremo sul do Atlântico, fria e úmida. Frentes frias. Pode chegar até o Nordeste."
+          ]},
+          { tipo: "ex", txt: "ZCAS (Zona de Convergência do Atlântico Sul): mEc + mTa no verão → chuvas intensas no Sudeste. Responsável por enchentes em MG, RJ e SP." }
+        ]
+      }
+    ],
+    questoes: [
+      { q: "Nos ciclones tropicais, a rotação no Hemisfério Sul ocorre no sentido:", alts: ["Anti-horário, devido ao efeito Coriolis.", "Horário, devido ao efeito Coriolis.", "Sempre anti-horário em qualquer hemisfério.", "Determinado pela temperatura do oceano.", "Variável conforme a estação."], g: "B", j: "O efeito Coriolis deflete os ventos para a direita no HN e para a esquerda no HS. Isso faz os ciclones girarem anti-horariamente no HN e horariamente no HS." },
+      { q: "O fenômeno El Niño provoca, no Nordeste brasileiro:", alts: ["Chuvas acima da média.", "Seca intensa, com chuvas abaixo da média.", "Temperaturas abaixo do normal.", "Aumento da umidade sem variação nas chuvas.", "Ciclones tropicais."], g: "B", j: "Durante o El Niño, o acúmulo de água quente no Pacífico Leste altera os padrões de circulação atmosférica, inibindo a formação de chuvas no Nordeste. La Niña tem efeito oposto." },
+      { q: "A chuva orográfica ocorre quando:", alts: ["Massas de ar quente e fria se encontram.", "O sol aquece intensamente a superfície.", "Massas de ar úmido são forçadas a subir por barreiras montanhosas.", "Ciclones tropicais atingem o interior.", "Ventos alísios carregam umidade oceânica."], g: "C", j: "A chuva orográfica ocorre quando o ar úmido é bloqueado por montanhas e forçado a ascender. Na subida, esfria adiabaticamente e precipita no barlavento. O sotavento fica na 'sombra da chuva'." },
+      { q: "Qual massa de ar é responsável pelas frentes frias que chegam até o Nordeste?", alts: ["mEc", "mTa", "mPa", "mTc", "mEa"], g: "C", j: "A Massa Polar Atlântica (mPa) origina-se no Atlântico Sul polar. É fria e úmida. Ao avançar pelo Brasil, provoca frentes frias no Sul/Sudeste e, em episódios intensos, pode atingir o Nordeste." },
+      { q: "A ZCAS é responsável principalmente por:", alts: ["Secas no Centro-Oeste.", "Chuvas intensas no Sudeste e parte do Centro-Oeste no verão.", "Ciclones extratropicais no Sul.", "Ondas de calor no Nordeste no inverno.", "Redução das chuvas na Amazônia."], g: "B", j: "A ZCAS é faixa de nebulosidade entre a Amazônia e o Atlântico Sul, formada pela interação mEc+mTa. É especialmente ativa no verão e responsável por chuvas abundantes que frequentemente causam enchentes no Sudeste." },
+      { q: "A diferença entre ciclone e anticiclone é que:", alts: ["Ciclone é alta pressão; anticiclone é baixa pressão.", "Ciclone é baixa pressão com ventos convergentes; anticiclone é alta pressão com ventos divergentes.", "Ambos são de baixa pressão.", "Ciclone ocorre no verão; anticiclone no inverno.", "Ciclone é exclusivo dos trópicos."], g: "B", j: "Ciclone = baixa pressão, ventos convergem (tempo instável, chuvoso). Anticiclone = alta pressão, ventos divergem (tempo estável, seco). São sistemas opostos, fundamentais para a dinâmica do tempo." },
+      { q: "A Massa Tropical Continental (mTc) é caracterizada por ser:", alts: ["Fria e úmida.", "Quente e seca, provocando ondas de calor no Centro-Oeste.", "Úmida e equatorial.", "Fria e seca.", "Quente e úmida."], g: "B", j: "A mTc forma-se sobre o Chaco paraguaio-boliviano (baixa umidade, alta temperatura). Traz calor intenso e seco — favorecendo incêndios no Centro-Oeste e ondas de calor no Sudeste." },
+      { q: "La Niña tende a provocar, no Sul do Brasil:", alts: ["Chuvas muito acima da média.", "Temperaturas elevadas e seca.", "Inverno mais rigoroso e seca mais intensa.", "Ciclones tropicais.", "Nenhum impacto significativo."], g: "C", j: "Durante La Niña, o Pacífico Leste fica mais frio. Para o Sul do Brasil, isso se traduz em menor precipitação e frio mais intenso. As secas durante La Niña afetam significativamente a agricultura e as hidrelétricas." },
+      { q: "A chuva convectiva difere da frontal porque:", alts: ["Convectiva depende de montanhas.", "Frontal é exclusiva de regiões tropicais.", "Convectiva resulta do aquecimento local com subida rápida do ar, sendo intensa e curta; a frontal decorre do encontro de massas de ar.", "Frontal ocorre apenas no verão.", "Convectiva é mais frequente no Sul."], g: "C", j: "Convectiva: tardes tropicais, sol aquece o solo, ar sobe rapidamente, precipita em 'pancadas' localizadas. Frontal: sistemas de grande escala, massas com características diferentes se encontram, precipitação mais duradoura e abrangente." },
+      { q: "Anomalias climáticas positivas de temperatura são cada vez mais frequentes. O fator humano mais relacionado é:", alts: ["Desmatamento da Mata Atlântica apenas.", "Aumento das emissões de gases de efeito estufa, potencializando o aquecimento global.", "Expansão urbana exclusivamente na Europa.", "Uso de agrotóxicos.", "Construção de hidrelétricas."], g: "B", j: "O IPCC aponta que a queima de combustíveis fósseis e o desmatamento liberam CO₂ e outros gases que intensificam o efeito estufa. O acúmulo desses gases eleva as temperaturas médias globais e torna anomalias positivas cada vez mais frequentes." },
+      { q: "A Massa Equatorial Continental (mEc) domina o clima amazônico porque:", alts: ["É fria e seca.", "É quente e úmida, dominando a região e sendo responsável pelas chuvas abundantes da floresta.", "Origina-se no Atlântico.", "É estacional e só atua no inverno.", "Provoca ciclones na Amazônia."], g: "B", j: "A mEc forma-se sobre a floresta amazônica. O calor intenso e a evapotranspiração geram uma massa quente e extremamente úmida. É a principal responsável pelas chuvas abundantes da Amazônia e influencia o clima de grande parte do Brasil no verão." }
+    ]
+  },
+  {
+    id: "geo2",
+    icon: "🌱",
+    nome: "Geografia 2",
+    topico: "Desindustrialização e Agroecologia",
+    conteudo: [
+      {
+        h2: "1. DESINDUSTRIALIZAÇÃO",
+        items: [
+          { tipo: "p", txt: "Processo pelo qual a participação da indústria no PIB e no emprego diminui estruturalmente. Pode ser relativa (perde participação mas cresce em absoluto) ou absoluta (produção industrial cai em termos reais)." },
+          { tipo: "h3", txt: "Causas no Brasil" },
+          { tipo: "ul", items: [
+            "Doença Holandesa: abundância de commodities valoriza o câmbio → indústria fica menos competitiva.",
+            "Câmbio sobrevalorizado: facilita importações, encarece exportações industriais.",
+            "Custo Brasil: carga tributária elevada, burocracia, infraestrutura precária.",
+            "Juros elevados: desestimulam investimento produtivo.",
+            "Concorrência chinesa: manufaturados baratos substituem a produção nacional.",
+            "Abertura comercial dos anos 1990 sem política industrial de compensação."
+          ]},
+          { tipo: "h3", txt: "Consequências" },
+          { tipo: "ul", items: [
+            "Reprimarização da pauta exportadora: mais commodities, menos manufaturados.",
+            "Perda de capacidade tecnológica e inovativa.",
+            "Maior vulnerabilidade às oscilações dos preços internacionais.",
+            "Desemprego industrial e precarização do trabalho."
+          ]}
+        ]
+      },
+      {
+        h2: "2. AGROECOLOGIA",
+        items: [
+          { tipo: "p", txt: "Ciência, prática e movimento social que desenvolve sistemas agrícolas sustentáveis, integrando princípios ecológicos, sociais e econômicos." },
+          { tipo: "h3", txt: "Princípios" },
+          { tipo: "ul", items: [
+            "Biodiversidade: policultura e integração de diferentes espécies.",
+            "Ciclagem de nutrientes: compostagem e adubação verde em vez de fertilizantes sintéticos.",
+            "Controle biológico de pragas: predadores naturais em vez de agrotóxicos.",
+            "Soberania alimentar: produção voltada ao abastecimento local.",
+            "Protagonismo dos agricultores familiares e comunidades tradicionais."
+          ]},
+          { tipo: "h3", txt: "No Brasil" },
+          { tipo: "ul", items: [
+            "Brasil = maior consumo de agrotóxicos do mundo.",
+            "PNAE (Lei 11.947/2009): 30% dos alimentos escolares devem vir da agricultura familiar.",
+            "MST como promotor da agroecologia nos assentamentos."
+          ]}
+        ]
+      }
+    ],
+    questoes: [
+      { q: "A 'Doença Holandesa' é um fenômeno de desindustrialização que consiste em:", alts: ["Importação em massa de produtos holandeses.", "A valorização cambial causada pela abundância de commodities, tornando a indústria doméstica menos competitiva.", "Fechamento de fábricas por doenças que afetam trabalhadores.", "Transferência de indústrias para países com mão de obra barata.", "Queda de produtividade por envelhecimento do parque fabril."], g: "B", j: "A Holanda nos anos 1960: gás natural valorizou o câmbio, prejudicando exportações industriais. Para o Brasil, a abundância de commodities tem efeito análogo: o real valorizado dificulta a competitividade da indústria manufatureira no exterior." },
+      { q: "A desindustrialização precoce brasileira difere da dos países desenvolvidos porque:", alts: ["No Brasil, ocorre antes que o país tenha atingido alto nível de renda e capacidade tecnológica industrial.", "No Brasil, é resultado exclusivo da abertura dos anos 1970.", "Nos países desenvolvidos, não há desindustrialização.", "No Brasil, a indústria cresceu mais do que em qualquer outro país.", "Nos países desenvolvidos, a desindustrialização é causada por guerras."], g: "A", j: "Países como EUA e Alemanha passaram pela desindustrialização após consolidar alto padrão tecnológico e alta renda. O Brasil perdeu participação industrial antes de completar esse desenvolvimento, tornando-se vulnerável a uma 'reprimarização' prematura." },
+      { q: "A reprimarização da pauta exportadora brasileira significa:", alts: ["O Brasil exporta mais produtos industrializados de alto valor.", "O Brasil aumentou exportação de commodities primárias em detrimento de manufaturados.", "O Brasil tornou-se autossuficiente em matérias-primas.", "O setor primário foi extinto pela industrialização.", "O Brasil reduziu dependência do mercado internacional."], g: "B", j: "A reprimarização é o movimento inverso da industrialização: a pauta exportadora passa a ser dominada por produtos primários com pouco valor agregado. Isso significa maior dependência dos preços de commodities e menor geração de empregos qualificados." },
+      { q: "A agroecologia difere da agricultura convencional principalmente porque:", alts: ["Utiliza OGMs para aumentar produtividade.", "Baseia-se em monoculturas com uso intensivo de agroquímicos.", "Integra princípios ecológicos, priorizando biodiversidade, ciclagem de nutrientes e autonomia dos agricultores.", "É praticada exclusivamente por grandes corporações.", "Proíbe qualquer tecnologia no campo."], g: "C", j: "A agroecologia tem como fundamentos a biodiversidade, os ciclos ecológicos, o controle biológico e a soberania alimentar. Não é só um conjunto de técnicas — é uma ciência e um movimento que questiona o modelo convencional e propõe alternativas sustentáveis." },
+      { q: "Qual fator NÃO está diretamente ligado à desindustrialização brasileira?", alts: ["Elevada carga tributária (Custo Brasil).", "Câmbio sobrevalorizado pelas exportações de commodities.", "Expansão da rede de saneamento básico.", "Concorrência de manufaturados chineses.", "Juros elevados que inibem investimentos produtivos."], g: "C", j: "A expansão do saneamento é política de infraestrutura social — não está diretamente relacionada à desindustrialização. Todos os outros são causas estruturais amplamente discutidas no debate sobre competitividade industrial brasileira." },
+      { q: "O PNAE se conecta com a agroecologia ao:", alts: ["Financiar compra de agrotóxicos para a agricultura familiar.", "Exigir que 30% dos alimentos adquiridos provenham da agricultura familiar, fomentando produção agroecológica local.", "Proibir alimentos orgânicos nas escolas públicas.", "Criar incentivos para monoculturas de soja.", "Transferir recursos do agronegócio para a merenda."], g: "B", j: "O PNAE (Lei 11.947/2009) destina 30% dos recursos federais para alimentação escolar à compra da agricultura familiar. Cria demanda estável para pequenos produtores — muitos com práticas agroecológicas — fortalecendo a agricultura familiar e ecológica." },
+      { q: "A soberania alimentar defende:", alts: ["Exportação máxima de alimentos.", "O direito dos povos de definir suas políticas alimentares e produzir alimentos cultural e ecologicamente adequados.", "Proibição do comércio internacional de alimentos.", "Concentração da produção em grandes corporações.", "Uso exclusivo de sementes transgênicas."], g: "B", j: "Soberania alimentar (Via Campesina) vai além da segurança alimentar. Defende o direito dos povos de controlar seus próprios sistemas — sementes, terra, água, mercados — priorizando produção local diversificada. É conceito político, não apenas técnico." },
+      { q: "A concorrência de manufaturados chineses contribuiu para a desindustrialização brasileira porque:", alts: ["A China doou fábricas ao Brasil.", "Produtos chineses a custos menores substituíram produtos industriais brasileiros no mercado interno e externo.", "A China comprou indústrias brasileiras para fechá-las.", "O Brasil importou trabalhadores chineses.", "O governo subsidiou importações chinesas."], g: "B", j: "A ascensão da China como maior exportador de manufaturados foi um choque externo. Produtos têxteis, calçados, eletrônicos chineses invadiram o mercado após a abertura comercial, competindo com a produção nacional em desvantagem de custo." },
+      { q: "O controle biológico de pragas consiste em:", alts: ["Usar agrotóxicos de origem biológica.", "Introduzir organismos predadores ou parasitas naturais das pragas para controlá-las sem químicos.", "Modificar geneticamente plantas para resistir às pragas.", "Eliminar formas de vida animal nos cultivos.", "Usar radiação para esterilizar insetos."], g: "B", j: "O controle biológico usa relações naturais entre predador/presa ou parasita/hospedeiro para reduzir populações de pragas. Exemplo: vespas parasitóides contra a lagarta-do-cartucho. É ferramenta central da agroecologia para reduzir dependência de agrotóxicos." },
+      { q: "A desindustrialização absoluta difere da relativa porque:", alts: ["Na relativa, a indústria cresce em valores absolutos mas perde participação no PIB; na absoluta, a produção industrial cai em termos reais.", "Na absoluta, só a indústria de base é afetada.", "A relativa é exclusiva dos países emergentes.", "A absoluta ocorre apenas em guerras.", "São sinônimos."], g: "A", j: "A relativa pode ocorrer com expansão industrial quando outros setores crescem mais. A absoluta é mais grave: queda efetiva na produção industrial, fechamento de plantas e perda de empregos diretos." },
+      { q: "A agroecologia pode reduzir o impacto da desindustrialização em regiões rurais porque:", alts: ["Cria empregos industriais.", "Valoriza produção diversificada, gera empregos no campo e reduz dependência de insumos importados.", "Aumenta exportação de commodities.", "Estimula migração para cidades.", "Depende de grandes investimentos industriais."], g: "B", j: "A agroecologia fortalece a agricultura familiar com diversificação, renda local e redução de custos com insumos. Em regiões afetadas pelo êxodo rural e desindustrialização, pode ser vetor de desenvolvimento territorial alternativo, fixando populações e dinamizando economias locais." }
+    ]
+  },
+  {
+    id: "arte",
+    icon: "🎨",
+    nome: "Arte",
+    topico: "Antiguidade Clássica, Arte Paleocristã e Medieval",
+    conteudo: [
+      {
+        h2: "1. ARTE DA ANTIGUIDADE CLÁSSICA",
+        items: [
+          { tipo: "h3", txt: "Arte Grega" },
+          { tipo: "ul", items: [
+            "Arquitetura: 3 ordens — Dórica (austera, sem base), Jônica (volutas), Coríntia (capitel folhado). Partenon = dórica.",
+            "Escultura: do kouros estático ao dinamismo helenístico. Policleto criou o 'cânone'. Período helenístico: maior dramatismo (Laocoonte).",
+            "Cerâmica: figuras negras → figuras vermelhas (maior detalhamento)."
+          ]},
+          { tipo: "h3", txt: "Arte Romana" },
+          { tipo: "ul", items: [
+            "Arco, abóbada e concreto romano: inovações estruturais. Coliseu, Panteão, aquedutos.",
+            "Escultura: retrato hiper-realista (vs. idealismo grego).",
+            "Mosaico: decoração de pisos e paredes."
+          ]}
+        ]
+      },
+      {
+        h2: "2. ARTE PALEOCRISTÃ (séculos I–VI d.C.)",
+        items: [
+          { tipo: "p", txt: "Surgiu discretamente nas catacumbas durante as perseguições. Com o Édito de Milão (313 d.C.), a arte cristã tornou-se monumental." },
+          { tipo: "ul", items: [
+            "Hierarquia de tamanhos: figuras mais importantes = maior escala.",
+            "Frontalidade: figuras rígidas, de frente, sem tridimensionalidade.",
+            "Mosaicos de Ravena (séc. VI): ápice técnico e simbólico.",
+            "Símbolos: peixe (ΙΧΘΥΣ), Chi-Rho (☧), Bom Pastor, pomba."
+          ]}
+        ]
+      },
+      {
+        h2: "3. ARTE MEDIEVAL",
+        items: [
+          { tipo: "h3", txt: "Arte Românica (séculos X–XII)" },
+          { tipo: "ul", items: [
+            "Igrejas sólidas, paredes espessas, arcos semicirculares, janelas pequenas — aparência de fortaleza.",
+            "Escultura e pintura integradas à arquitetura, estilizadas, sem tridimensionalidade.",
+            "Afrescos e iluminuras de manuscritos religiosos."
+          ]},
+          { tipo: "h3", txt: "Arte Gótica (séculos XII–XV)" },
+          { tipo: "ul", items: [
+            "Arco ogival + abóbada de nervuras + arcobotante = construções mais altas e abertas.",
+            "Vitrais coloridos: a luz como manifestação divina (Abade Suger).",
+            "Notre-Dame de Paris e Catedral de Chartres: exemplos paradigmáticos.",
+            "Giotto di Bondone: naturalismo, volume, expressividade — precursor do Renascimento."
+          ]}
+        ]
+      }
+    ],
+    questoes: [
+      { q: "O Partenon foi construído segundo a ordem arquitetônica:", alts: ["Jônica (capitel com volutas).", "Coríntia (capitel folhado de acanto).", "Dórica, mais austera e sem base.", "Compósita.", "Toscana."], g: "C", j: "O Partenon (447–432 a.C.) é o exemplo máximo da ordem dórica: colunas robustas sem base, capitel simples, friso com metopas e tríglifos. Representa o ápice da arquitetura do período clássico grego." },
+      { q: "A principal diferença entre escultura grega e romana é que:", alts: ["Gregos priorizavam o retrato realista; romanos, o idealismo.", "Gregos buscavam o ideal de beleza; romanos valorizavam o retrato hiper-realista.", "Escultura romana era exclusivamente religiosa.", "Gregos não produziam em mármore.", "A romana era maior em escala."], g: "B", j: "A escultura grega buscava o kállos (beleza ideal). Roma reinterpretou com foco no retrato fiel: esculturas de imperadores com realismo anatômico — rugas, imperfeições, expressividade individual." },
+      { q: "A arte nas catacumbas usava o símbolo do peixe (Ictus) porque:", alts: ["Cristãos apreciavam iconografia marítima.", "O peixe era símbolo de fertilidade hebraica.", "Em período de perseguição, o peixe era código discreto para identificar a fé cristã.", "A Igreja proibia representações humanas.", "Romanos usavam o peixe como símbolo imperial."], g: "C", j: "O peixe (ΙΧΘΥΣ em grego) era acrônimo: 'Iesous Christos Theou Yios Soter' (Jesus Cristo Filho de Deus Salvador). Permitia reconhecimento entre cristãos sem exposição às autoridades romanas." },
+      { q: "O Édito de Milão (313 d.C.) impactou a arte cristã porque:", alts: ["Proibiu representações artísticas religiosas.", "Legalizou o cristianismo, permitindo construção de basílicas e arte cristã monumental.", "Tornou o paganismo religião oficial.", "Ordenou a destruição das catacumbas.", "Criou o estilo gótico."], g: "B", j: "Com a legalização do cristianismo, a arte cristã deixou as catacumbas e assumiu dimensões monumentais. Basílicas foram construídas com mosaicos, afrescos e esculturas que comunicavam a fé publicamente." },
+      { q: "A hierarquia de tamanhos na arte paleocristã significa que:", alts: ["Apenas crianças eram menores.", "A perspectiva realista não havia sido desenvolvida.", "Figuras mais importantes eram representadas em maior escala, independentemente da posição espacial.", "Os artistas desconheciam proporções humanas.", "Figuras maiores representavam sempre os reis."], g: "C", j: "Na arte medieval, a escala simbólica predominava sobre o realismo espacial: Cristo ou a Virgem apareciam maiores que apóstolos, que eram maiores que figuras secundárias — hierarquia espiritual, não anatômica." },
+      { q: "A principal inovação técnica da arquitetura gótica que permitiu construções mais altas foi:", alts: ["Concreto romano e abóbadas de berço.", "Arco ogival combinado com abóbada de nervuras e arcobotante.", "Colunas dóricas nas fachadas.", "Pedra calcária em lugar de mármore.", "Torres circulares na entrada."], g: "B", j: "Arco ogival distribui peso eficientemente. A abóbada de nervuras concentra forças em pontos específicos, e o arcobotante leva essas forças para fora da parede. Juntos, permitem paredes finas, janelas maiores e catedrais mais altas." },
+      { q: "Giotto é precursor do Renascimento porque:", alts: ["Introduziu tintas a óleo.", "Rompeu com a rigidez medieval, introduzindo naturalismo, expressividade e tridimensionalidade.", "Criou o estilo gótico tardio.", "Foi o primeiro a usar perspectiva geométrica linear.", "Pintou exclusivamente temas mitológicos."], g: "B", j: "Giotto (1267–1337) representou figuras com volume, emoção e coerência espacial inéditas. Seus afrescos na Cappella degli Scrovegni mostram personagens tridimensionais que expressam sentimentos humanos reais — inaugurando a transição para o humanismo." },
+      { q: "Os mosaicos de Ravena são ápice da arte paleocristã porque:", alts: ["Foram feitos por artistas gregos clássicos.", "Combinam técnica refinada, fundo dourado, hierarquia de figuras e simbolismo cristão em conjuntos de extraordinária beleza.", "Representam cenas exclusivamente do Antigo Testamento.", "Foram os primeiros com perspectiva linear.", "Foram produzidos por artistas árabes."], g: "B", j: "Os mosaicos de Ravena (San Vitale, Sant'Apollinare) representam o ápice técnico e simbólico. O fundo dourado simboliza a eternidade divina; os azuis profundos, o sagrado; figuras frontais hieráticas comunicam poder espiritual." },
+      { q: "A arquitetura românica é comparada a uma 'fortaleza espiritual' porque:", alts: ["Era usada como defesa militar efetiva.", "Suas paredes espessas, aberturas pequenas e aspecto sólido refletiam a insegurança feudal e a função da Igreja como refúgio espiritual.", "Foi construída sobre fortalezas romanas.", "Servia simultaneamente como igreja e quartel.", "Seus construtores eram exclusivamente militares."], g: "B", j: "O estilo românico (séculos X-XII) surgiu num período de instabilidade feudal. As igrejas com paredes grossas, janelas estreitas e aspecto maciço refletiam a função da Igreja como espaço de proteção e segurança espiritual." },
+      { q: "A cerâmica de figuras vermelhas foi avanço técnico sobre as figuras negras porque:", alts: ["Usava tinta importada do Egito.", "Inverteu o processo — fundo negro, figuras na cor da argila, permitindo mais detalhes e expressividade.", "Substituiu o barro por mármore.", "Introduziu cenas de batalha.", "Passou a usar esmalte oriental."], g: "B", j: "Nas figuras negras, as figuras eram pintadas em negro sobre o barro avermelhado. Com as figuras vermelhas, o fundo era negro e as figuras ficavam na cor natural da argila. Isso permitiu detalhar melhor musculatura, expressões e roupagens." },
+      { q: "O vitral gótico tinha função teológica porque:", alts: ["Protegia os fiéis do frio.", "A luz colorida era interpretada como manifestação da presença divina, transformando o interior da catedral em espaço sagrado.", "Narrava exclusivamente o Antigo Testamento.", "Substituía esculturas nas igrejas pobres.", "Foi imposto pelo Papa como sinal de riqueza."], g: "B", j: "O abade Suger defendia que a luz material levava o fiel à luz espiritual (lux nova). A luz filtrada e colorida não era ornamento — era teologia visual que transformava o espaço interno da catedral numa experiência de transcendência." }
+    ]
+  },
+  {
+    id: "lit",
+    icon: "📚",
+    nome: "Literatura",
+    topico: "Quinhentismo e Barroco",
+    conteudo: [
+      {
+        h2: "1. QUINHENTISMO (século XVI)",
+        items: [
+          { tipo: "p", txt: "Conjunto de documentos produzidos sobre o Brasil durante as navegações e a colonização. Não é um movimento literário organizado — é literatura de informação e catequese." },
+          { tipo: "ul", items: [
+            "Literatura de Informação: cartas, relatos de viagem, descrições geográficas.",
+            "Literatura de Catequese: produzida pelos jesuítas para converter os indígenas.",
+            "Caráter documental, visão etnocêntrica europeia.",
+            "Pero Vaz de Caminha: 'Carta ao Rei D. Manuel' (1500) — certidão de nascimento do Brasil.",
+            "Pe. José de Anchieta: textos em tupi, português e latim. Teatro catequético.",
+            "Pero de Magalhães Gandavo: 'Tratado da Terra do Brasil'.",
+            "Hans Staden: 'Duas Viagens ao Brasil' — relato de cativeiro entre os Tupinambás."
+          ]}
+        ]
+      },
+      {
+        h2: "2. BARROCO (séc. XVII – início XVIII)",
+        items: [
+          { tipo: "p", txt: "Estilo artístico e literário predominante no século XVII, surgido no contexto da Contrarreforma. No Brasil, início com 'Prosopopeia' (1601), de Bento Teixeira." },
+          { tipo: "h3", txt: "Características" },
+          { tipo: "ul", items: [
+            "Antítese e paradoxo: vida/morte, luz/sombra, fé/razão.",
+            "Pessimismo: 'Vanitas vanitatum' — a vida é breve, os prazeres são passageiros.",
+            "Cultismo (Gongorismo): linguagem rebuscada, metáforas excessivas, vocabulário erudito.",
+            "Conceptismo (Quevedismo): jogos de ideias, raciocínio engenhoso, persuasão.",
+            "Dilema entre Teocentrismo (fé, alma) e Antropocentrismo (razão, prazer)."
+          ]},
+          { tipo: "h3", txt: "Principais Autores" },
+          { tipo: "ul", items: [
+            "Pe. Antônio Vieira: maior prosador. Sermões conceptistas. 'Sermão da Sexagésima'.",
+            "Gregório de Matos ('Boca do Inferno'): primeiro grande poeta brasileiro. Lírica, religiosa e sátira social virulenta.",
+            "Bento Teixeira: 'Prosopopeia' — primeiro poema épico brasileiro."
+          ]}
+        ]
+      }
+    ],
+    questoes: [
+      { q: "A 'Carta de Pero Vaz de Caminha' é obra inaugural do Quinhentismo porque:", alts: ["É o primeiro poema épico sobre o Brasil.", "É o primeiro texto em tupi escrito no Brasil.", "É o primeiro documento escrito sobre o Brasil, descrevendo a chegada de Cabral e o contato com os indígenas.", "Narra a fundação de São Paulo.", "Foi o primeiro texto a defender a independência."], g: "C", j: "Escrita em 1500 e endereçada ao Rei D. Manuel, é o primeiro registro escrito sobre o Brasil — a 'certidão de nascimento' do país e marco inaugural da literatura de informação brasileira." },
+      { q: "A literatura jesuítica de catequese, como a de Pe. Anchieta, tinha objetivo principal de:", alts: ["Documentar biodiversidade para a ciência europeia.", "Converter povos indígenas ao catolicismo, usando textos em tupi, teatro e poesia como instrumento de evangelização.", "Criar literatura nacional independente.", "Registrar costumes indígenas de forma neutra.", "Traduzir a Bíblia para difundir o protestantismo."], g: "B", j: "Os jesuítas usaram as línguas indígenas — especialmente o tupi — e gêneros teatrais e poéticos como ferramentas pedagógicas de evangelização. Anchieta compôs em tupi, português e latim para fins catequéticos." },
+      { q: "O Barroco surge no contexto da Contrarreforma porque:", alts: ["A Igreja Protestante financiou artistas barrocos.", "A Igreja Católica utilizou arte exuberante como instrumento de reafirmação da fé diante do avanço protestante.", "O Barroco rejeitava qualquer religiosidade.", "A Reforma eliminou o mecenato artístico.", "O Barroco foi criado na Inglaterra protestante."], g: "B", j: "Após o Concílio de Trento, a Igreja adotou estratégia estética de impacto emocional. O Barroco — com dramatismo e apelo aos sentidos — era o instrumento perfeito para comover fiéis e combater a sobriedade protestante." },
+      { q: "O 'dilema barroco' refere-se à tensão entre:", alts: ["Português e espanhol nas colônias.", "Literatura erudita e popular.", "O teocentrismo medieval (fé, alma) e o antropocentrismo renascentista (razão, corpo, prazer).", "Barroco europeu e colonial.", "Jesuítas e protestantes no Brasil."], g: "C", j: "O homem barroco vivia entre dois mundos: a modernidade valorizando indivíduo e prazer (herança renascentista) e a tradição religiosa exigindo mortificação e submissão a Deus. Essa tensão gera os paradoxos e o pessimismo característicos do Barroco." },
+      { q: "O cultismo (gongorismo) no Barroco caracteriza-se por:", alts: ["Linguagem simples e direta.", "Argucias lógicas e jogos de ideias para persuadir.", "Linguagem rebuscada, metáforas excessivas, latinismos e vocabulário erudito.", "Valorização da natureza brasileira.", "Uso de formas medievais."], g: "C", j: "O cultismo privilegia a forma sobre o conteúdo — beleza linguística, vocabulário raro, metáforas elaboradas e inversões sintáticas. Inspirado no espanhol Góngora, buscava impressionar pela erudição e requinte formal." },
+      { q: "Gregório de Matos é chamado 'Boca do Inferno' especialmente por causa de:", alts: ["Sua poesia mística e religiosa.", "Seus sermões criticando o protestantismo.", "Sua poesia satírica que atacava com virulência a hipocrisia, corrupção e costumes da sociedade baiana colonial.", "Seus poemas de amor a mulheres casadas.", "Sua defesa pública do pecado."], g: "C", j: "O apelido reflete sua língua afiada na sátira social. Gregório atacou a corrupção de governadores, a hipocrisia do clero, o racismo colonial e os costumes libidinosos da Bahia do século XVII." },
+      { q: "Pe. Antônio Vieira usava o estilo conceptista nos sermões porque:", alts: ["Preferia a simplicidade linguística.", "Sua função era persuadir usando argucias lógicas, raciocínio elaborado e jogos de ideias.", "Era influenciado pelo cultismo de Góngora.", "Seus sermões eram para índios analfabetos.", "Rejeitava o uso da Bíblia."], g: "B", j: "O conceptismo é o estilo do engenho intelectual. Vieira, como pregador, precisava persuadir. O 'Sermão da Sexagésima' é exemplo brilhante: usa a parábola do semeador para criticar pregadores superficiais e defender o poder da palavra bem argumentada." },
+      { q: "'Prosopopeia' (1601) é marco inicial do Barroco brasileiro porque:", alts: ["Foi o primeiro texto em prosa no Brasil.", "Foi o primeiro poema épico escrito no Brasil, inaugurando a produção literária barroca.", "Foi a primeira obra a criticar a colonização.", "Foi escrita em tupi-guarani.", "Foi o primeiro romance brasileiro."], g: "B", j: "Escrita em oitavas camonianas, 'Prosopopeia' celebra Jorge de Albuquerque Coelho. É o primeiro poema épico sobre o Brasil e o ponto de partida convencional do Barroco brasileiro na periodização literária." },
+      { q: "A noção de 'vanitas' é central no Barroco porque:", alts: ["Representava a riqueza dos mecenas.", "Expressava o pessimismo diante da efemeridade da vida, do poder e das riquezas humanas.", "Indicava a exaltação do corpo.", "Refletia o otimismo renascentista.", "Era elogio à vaidade feminina."], g: "B", j: "Derivada do Eclesiastes ('Vanitas vanitatum, omnia vanitas'), a ideia de que tudo é passageiro é central no Barroco. Diante da morte e do juízo final, riquezas e beleza são ilusórios — gerando o pessimismo e imagens de caveiras e flores murchas." },
+      { q: "No Brasil, o Barroco está associado principalmente a:", alts: ["O período pré-colonial.", "O ciclo do ouro em Minas Gerais, que gerou riqueza suficiente para o florescimento artístico.", "A independência do Brasil.", "A escravidão africana no século XIX.", "O governo pombalino."], g: "B", j: "A riqueza do ouro mineiro no século XVIII financiou igrejas e a vida cultural. O Aleijadinho e Mestre Athayde são os maiores representantes do Barroco mineiro. A efervescência reflete-se na literatura de Gregório de Matos e na oratória de Vieira." },
+      { q: "Antítese e paradoxo são figuras centrais no Barroco porque:", alts: ["São simples e acessíveis ao público iletrado.", "Expressam o dilema barroco: coexistência de opostos irreconciliáveis como fé e razão, vida e morte, prazer e culpa.", "Foram impostas pela Igreja para censurar a literatura erótica.", "Derivam exclusivamente da tradição medieval portuguesa.", "Foram introduzidas pelo cultismo de Góngora."], g: "B", j: "O homem barroco vivia contradições fundamentais. A antítese e o paradoxo são as formas literárias que melhor expressam essa tensão irresolvida — tornando-se marcas estilísticas definidoras do período." }
+    ]
+  },
+  {
+    id: "fil",
+    icon: "🧠",
+    nome: "Filosofia",
+    topico: "Filosofia Medieval: Patrística e Escolástica",
+    conteudo: [
+      {
+        h2: "1. PATRÍSTICA (séculos II–VIII)",
+        items: [
+          { tipo: "p", txt: "Período dos 'Padres da Igreja' que sistematizaram a doutrina cristã usando principalmente o neoplatonismo. A filosofia era 'serva da teologia'." },
+          { tipo: "h3", txt: "Santo Agostinho (354–430)" },
+          { tipo: "ul", items: [
+            "Obras: 'Confissões' (autobiografia espiritual) e 'A Cidade de Deus'.",
+            "Iluminação divina: o conhecimento verdadeiro vem de Deus que ilumina a mente (influência platônica).",
+            "Privatio boni: o mal não é substância, mas ausência de bem.",
+            "Duas Cidades: Cidade de Deus (eleitos) × Cidade do Homem (bens terrenos).",
+            "Predestinação: Deus já sabe quem será salvo."
+          ]}
+        ]
+      },
+      {
+        h2: "2. ESCOLÁSTICA (séculos IX–XIV)",
+        items: [
+          { tipo: "p", txt: "Método filosófico-teológico das universidades medievais (Paris, Oxford, Bolonha). Concilia fé e razão usando a lógica aristotélica. Método: disputatio." },
+          { tipo: "h3", txt: "Problema dos Universais" },
+          { tipo: "ul", items: [
+            "Realismo (Anselmo): universais existem realmente — ante rem. Influência platônica.",
+            "Nominalismo (Ockham): universais são apenas nomes (nomina), sem existência real.",
+            "Conceitualismo (Abelardo): universais existem na mente, mas correspondem a algo real nas coisas."
+          ]},
+          { tipo: "h3", txt: "São Tomás de Aquino (1225–1274)" },
+          { tipo: "ul", items: [
+            "Obra: 'Suma Teológica'. Síntese entre aristotelismo e cristianismo.",
+            "Fé e razão complementares: razão alcança certas verdades (existência de Deus); fé revela o que supera a razão (Trindade).",
+            "Cinco Vias: provas racionais da existência de Deus — movimento, causalidade, contingência, graus de perfeição, finalidade.",
+            "Lei Natural: a razão humana participa da lei eterna de Deus."
+          ]},
+          { tipo: "h3", txt: "Anselmo de Cantuária (1033–1109)" },
+          { tipo: "ex", txt: "Argumento Ontológico: Deus é 'aquilo além do qual nada maior pode ser pensado'. Se existe no pensamento, deve existir na realidade — pois existir na realidade é mais perfeito." }
+        ]
+      }
+    ],
+    questoes: [
+      { q: "'A filosofia é serva da teologia' na Patrística significa que:", alts: ["A teologia deve ser substituída pela filosofia.", "A filosofia era usada como instrumento racional para defender a fé, mas sempre subordinada a ela.", "A razão filosófica é superior à revelação.", "A Igreja proibia o estudo da filosofia.", "A filosofia medieval era exclusivamente aristotélica."], g: "B", j: "Os Padres não rejeitavam a filosofia grega — a usavam como ferramenta racional para argumentar em favor do cristianismo. Mas quando houvesse conflito, a fé prevalecia. Por isso 'serva', não soberana." },
+      { q: "A teoria da iluminação divina em Agostinho afirma que:", alts: ["O conhecimento vem exclusivamente da experiência sensorial.", "O conhecimento verdadeiro é infundido por Deus na mente humana, que por si só não acessa verdades eternas.", "Deus não interfere no processo cognitivo.", "O conhecimento deriva da lógica aristotélica.", "A iluminação é exclusiva dos santos."], g: "B", j: "Inspirado no platonismo, Agostinho argumenta que verdades eternas não podem vir dos sentidos (que só captam o mutável). São iluminadas diretamente por Deus — explica por que todos têm noção de justiça mesmo sem experiência direta dela." },
+      { q: "A diferença fundamental entre Patrística e Escolástica é que:", alts: ["A Patrística usava Aristóteles; a Escolástica, Platão.", "A Escolástica surgiu nos monastérios; a Patrística, entre os bispos.", "A Patrística usou o platonismo para defender a fé; a Escolástica usou o aristotelismo para sistematizar a teologia nas universidades.", "A Patrística era pagã e a Escolástica, cristã.", "A Escolástica rejeitava a filosofia pagã."], g: "C", j: "A Patrística (II-VIII) recorreu ao neoplatonismo para dar base filosófica ao cristianismo nascente. A Escolástica (IX-XIV) surgiu com a tradução de Aristóteles para o latim e sistematizou a teologia usando sua lógica nas universidades medievais." },
+      { q: "O Argumento Ontológico de Anselmo baseia-se em:", alts: ["A existência de Deus é provada pela observação da natureza.", "Deus, sendo aquilo além do qual nada maior pode ser pensado, deve existir na realidade, pois existir na realidade é mais perfeito que existir só no pensamento.", "A existência de Deus é demonstrada pelo movimento dos astros.", "Deus existe porque os humanos precisam de um criador.", "A existência de Deus é indemonstrável pela razão."], g: "B", j: "O argumento é apriorístico: parte da definição de Deus para concluir sua existência. Se Deus existisse só no pensamento, não seria o ser além do qual nada maior pode ser pensado. Logo deve existir na realidade. Kant, séculos depois, criticaria esse argumento." },
+      { q: "As Cinco Vias de São Tomás são:", alts: ["Cinco virtudes teologais.", "Cinco formas de interpretar a Bíblia.", "Cinco argumentos racionais para provar a existência de Deus: movimento, causalidade, contingência, graus de perfeição e finalidade.", "Cinco etapas do método escolástico.", "Cinco categorias aristotélicas."], g: "C", j: "As Cinco Vias (Suma Teológica) são provas cosmológicas e teleológicas: movimento exige Primeiro Motor; toda causa exige Causa Primeira; seres contingentes exigem ser necessário; graus de perfeição exigem máximo; finalidade da natureza exige Ordenador." },
+      { q: "O nominalismo de Guilherme de Ockham defendia que:", alts: ["Universais existem realmente antes das coisas.", "Universais são apenas nomes — construções linguísticas da mente — sem existência real fora dos indivíduos.", "Universais existem como conceitos que correspondem a algo real.", "Universais derivam da revelação divina.", "Universais são idênticos às Ideias platônicas."], g: "B", j: "Para Ockham, só existem indivíduos particulares. Conceitos como 'humanidade' são palavras (nomina) que a mente usa para agrupar coisas semelhantes, sem existência independente. Isso tinha implicações teológicas perigosas para dogmas como a Trindade." },
+      { q: "Agostinho definiu o mal como 'privatio boni' (privação do bem), significando que:", alts: ["O mal é substância criada por Deus para testar os humanos.", "O mal não tem existência própria — é ausência de bem, como a escuridão é ausência de luz.", "O mal é eterno e coexiste com Deus.", "O mal foi criado pelo diabo.", "O mal existe apenas no plano material."], g: "B", j: "Agostinho combatia o maniqueísmo (dois princípios eternos — bem e mal). Para ele, tudo criado por Deus é bom. O mal é uma privação, carência de ser e bem — não substância independente. Isso preserva a onipotência e a bondade de Deus." },
+      { q: "A distinção agostiniana entre 'Cidade de Deus' e 'Cidade do Homem' corresponde a:", alts: ["Diferença entre Roma e Jerusalém.", "Separação entre quem ama a Deus acima de tudo e quem prefere os bens terrenos.", "Divisão política entre Papado e Império.", "Diferença entre clero regular e secular.", "Separação entre filosofia pagã e teologia cristã."], g: "B", j: "As duas cidades são comunidades espirituais que coexistem na história. A Cidade de Deus: quem ama a Deus até desprezar a si mesmo. A Cidade do Homem: quem se ama até desprezar a Deus. A história é o drama do conflito até o Juízo Final." },
+      { q: "A síntese filosófica de São Tomás entre fé e razão implica que:", alts: ["A razão é sempre superior à fé.", "A fé é sempre superior e a razão deve ser descartada.", "Fé e razão são complementares: a razão demonstra certas verdades; a fé revela o que supera a razão.", "Teologia e filosofia são campos sem nenhuma relação.", "Só a revelação bíblica pode ser fonte de conhecimento."], g: "C", j: "Tomás é o arquiteto da síntese tomista: nem razão sozinha (como alguns gregos), nem só fé (como alguns patrísticos). Há verdades acessíveis à razão (preâmbulos da fé) e verdades que a razão não alcança (mistérios revelados). As duas não se contradizem." },
+      { q: "O método escolástico da disputatio caracterizava-se por:", alts: ["Sequência de orações sobre textos bíblicos.", "Discussão formal estruturada em questão, objeções, contra-argumentos e conclusão — sistematizando o saber pela lógica.", "Experimentos empíricos para verificar proposições.", "Conferências de bispos sem participação dos estudantes.", "Memorização de textos gregos."], g: "B", j: "A disputatio era o coração do ensino escolástico. Um mestre propunha uma quaestio, apresentava objeções de todos os lados, respondia e estabelecia a determinatio. A Suma Teológica de Tomás está escrita exatamente nesse formato." },
+      { q: "A 'lei natural' em São Tomás significa:", alts: ["Leis físicas da natureza estudadas pela ciência.", "A participação da razão humana na lei eterna de Deus — inclinação natural para o bem que todos possuem.", "Regras de comportamento impostas pela sociedade civil.", "Mandamentos bíblicos do Antigo Testamento.", "A lei da selva — sobrevivência do mais forte."], g: "B", j: "Para Tomás há quatro tipos de lei: eterna, natural, humana e divina. A lei natural é a participação humana na lei eterna pela razão — todos têm acesso básico a princípios morais como 'não matar' e 'fazer o bem'. É a base da ética natural tomista." }
+    ]
+  },
+  {
+    id: "soc",
+    icon: "👥",
+    nome: "Sociologia",
+    topico: "Instituições Sociais, Desigualdade e Conflito",
+    conteudo: [
+      {
+        h2: "CAPÍTULO 4 – FAMÍLIA E ESCOLA",
+        items: [
+          { tipo: "p", txt: "Instituições sociais são estruturas que governam o comportamento coletivo por normas, valores e papéis. Durkheim as via como 'fatos sociais' externos e coercitivos; Marx as via como reflexo das relações de produção." },
+          { tipo: "h3", txt: "A Família" },
+          { tipo: "ul", items: [
+            "Principal agente de socialização primária: língua, valores, papéis de gênero, normas.",
+            "Tipos: nuclear, extensa, monoparental, homoparental, reconstituída.",
+            "Funções: reprodução, socialização, proteção, transmissão de patrimônio.",
+            "Transformações atuais: queda da natalidade, aumento do divórcio, reconhecimento de uniões homoafetivas."
+          ]},
+          { tipo: "h3", txt: "A Escola" },
+          { tipo: "ul", items: [
+            "Principal agente de socialização secundária.",
+            "Funções: transmissão de conhecimento, cidadania, qualificação para o trabalho.",
+            "Bourdieu e Passeron ('A Reprodução'): escola reproduz a dominação de classe valorizando o 'capital cultural' das classes dominantes.",
+            "Currículo oculto: valores implícitos ensinados (disciplina, hierarquia, conformidade).",
+            "Althusser: escola como Aparelho Ideológico de Estado (AIE)."
+          ]}
+        ]
+      },
+      {
+        h2: "CAPÍTULO 5 – DESIGUALDADE, POBREZA E CONFLITO",
+        items: [
+          { tipo: "h3", txt: "Desigualdade Social" },
+          { tipo: "ul", items: [
+            "Coeficiente de Gini: 0 (igualdade perfeita) a 1 (desigualdade absoluta). Brasil possui um dos maiores índices do mundo.",
+            "Funcionalismo (Davis-Moore): desigualdade é funcional — premia os mais capazes.",
+            "Marxismo: desigualdade estrutural pela exploração da mais-valia.",
+            "Weber: três dimensões — classe (econômica), status (prestígio) e poder (político)."
+          ]},
+          { tipo: "h3", txt: "Pobreza" },
+          { tipo: "ul", items: [
+            "Absoluta: privação do mínimo para sobrevivência física.",
+            "Relativa: abaixo do padrão médio de vida da sociedade.",
+            "Multidimensional: inclui falta de acesso a educação, saúde, saneamento, segurança."
+          ]},
+          { tipo: "h3", txt: "Conflito Social" },
+          { tipo: "ul", items: [
+            "Marx: conflito de classes é o motor da história.",
+            "Dahrendorf: conflito entre qualquer grupo dominante e dominado.",
+            "Simmel: conflito tem função integradora — pode reforçar coesão dos grupos.",
+            "Formas: greves, movimentos sociais (MST, feminismo, movimento negro), revoltas."
+          ]}
+        ]
+      }
+    ],
+    questoes: [
+      { q: "A socialização primária difere da secundária porque:", alts: ["A primária ocorre na escola; a secundária, no trabalho.", "A primária acontece nos primeiros anos de vida e internaliza valores básicos; a secundária ocorre em contextos formais como escola e trabalho.", "A primária é exclusiva das classes dominantes.", "A primária é sempre intencional; a secundária, inconsciente.", "Ambas são realizadas pela escola."], g: "B", j: "A socialização primária (Berger e Luckmann) ocorre na infância, no seio familiar, formando a identidade básica, a linguagem e os valores fundamentais. A secundária ocorre posteriormente em instituições específicas e pressupõe a base formada na primária." },
+      { q: "Para Bourdieu, a escola reproduz a desigualdade porque:", alts: ["Professores ensinam menos para alunos pobres.", "A escola valoriza e premia o 'capital cultural' das classes dominantes, tornando desigualdade social em desigualdade aparentemente meritocrática.", "Os currículos são feitos para manter a pobreza.", "A escola pública é sempre inferior à privada.", "A educação apenas transmite conhecimentos técnicos."], g: "B", j: "O capital cultural de Bourdieu: filhos de classes dominantes chegam à escola com repertório valorizado pelo sistema. Ao premiar isso como 'mérito', a escola converte vantagem de classe em mérito individual, legitimando a desigualdade." },
+      { q: "O Coeficiente de Gini mede:", alts: ["O PIB per capita.", "O nível de desigualdade na distribuição de renda — varia de 0 (igualdade) a 1 (desigualdade absoluta).", "O nível de pobreza absoluta.", "A expectativa de vida.", "O grau de democracia."], g: "B", j: "O Gini é o principal indicador de desigualdade de renda. Quanto mais próximo de 0, mais igualitária a distribuição. O Brasil historicamente apresenta Gini acima de 0,5 — entre os maiores do mundo." },
+      { q: "A diferença entre pobreza absoluta e relativa é que:", alts: ["A absoluta é exclusiva dos países em desenvolvimento.", "A absoluta é privação do mínimo para sobreviver; a relativa é definida em relação ao padrão médio de vida da sociedade.", "A relativa sempre implica desnutrição.", "São sinônimos.", "A relativa é sempre maior numericamente."], g: "B", j: "Uma pessoa pode estar acima da linha de pobreza absoluta mas em pobreza relativa (renda muito abaixo da média, sem acesso a lazer, educação de qualidade). As duas medidas são complementares — sobrevivência vs. exclusão social." },
+      { q: "Para Marx, o conflito de classes é o 'motor da história' porque:", alts: ["Guerras entre nações são a principal causa das transformações.", "A luta entre classes — definidas pelas relações de produção — impulsiona as transformações nas estruturas sociais e políticas.", "A competição entre indivíduos por status é a força motriz.", "Religiões são as principais causas de conflito.", "O conflito de classes só existe no capitalismo industrial."], g: "B", j: "Para Marx, toda história é história de lutas de classes (Manifesto Comunista). As contradições entre quem possui os meios de produção e quem vende sua força de trabalho geram tensões que produzem transformações sociais — revoluções." },
+      { q: "A teoria funcionalista de Davis e Moore sobre desigualdade argumenta que:", alts: ["A desigualdade deve ser eliminada.", "A desigualdade é necessária para garantir que posições importantes sejam ocupadas pelos mais talentosos, mediante recompensas diferenciadas.", "A desigualdade resulta exclusivamente da exploração capitalista.", "Classes sociais são exclusivas do capitalismo.", "A desigualdade diminui naturalmente com o crescimento econômico."], g: "B", j: "Davis e Moore (1945) argumentam que posições mais importantes e exigentes precisam ser mais remuneradas para atrair os mais capazes. Críticos apontam que o argumento ignora barreiras estruturais ao acesso dessas posições por grupos marginalizados." },
+      { q: "A família é o principal agente de socialização primária porque:", alts: ["É a única instituição reconhecida legalmente.", "É onde o indivíduo tem primeiros contatos com a cultura, a linguagem, os valores e as normas sociais, formando sua identidade básica.", "É obrigatória por lei em todas as sociedades.", "Realiza funções que nenhuma outra instituição pode.", "É a instituição mais recente da civilização."], g: "B", j: "A família é onde o indivíduo nasce e tem seus primeiros anos. É nesse espaço que ocorre a socialização mais intensa: aprendizado da língua, normas básicas, papéis de gênero e valores fundamentais. Incomparável como agente de socialização primária." },
+      { q: "O 'currículo oculto' na escola refere-se a:", alts: ["Conteúdos que não aparecem no currículo oficial.", "O conjunto de valores e comportamentos (disciplina, hierarquia, conformidade) que a escola ensina implicitamente, além do conteúdo formal.", "Conteúdos proibidos ensinados secretamente.", "Currículo especial para alunos com deficiência.", "Materiais usados fora da sala de aula."], g: "B", j: "O currículo oculto (Philip Jackson, 1968) é o aprendizado implícito: aceitação da autoridade, competição, pontualidade, conformidade. Para Bowles e Gintis, prepara os alunos das classes trabalhadoras para aceitar a disciplina e hierarquia do mundo do trabalho." },
+      { q: "A estratificação em Weber difere do marxismo porque:", alts: ["Weber não reconhece classes sociais.", "Para Weber, a estratificação tem três dimensões — classe, status e poder — enquanto Marx a reduz à relação de produção.", "Weber defende que a desigualdade é exclusivamente racial.", "Marx analisa três dimensões e Weber, uma.", "Weber defende a igualdade dentro do capitalismo."], g: "B", j: "Marx vê a posição de classe como o fundamento de toda estratificação. Weber é mais pluralista: classe econômica, status (prestígio/honra social) e poder político são dimensões independentes. Isso permite analisar casos de status elevado com renda baixa." },
+      { q: "A análise de Simmel sobre conflito difere da marxista por:", alts: ["Negar a existência de conflitos.", "Afirmar que o conflito tem função integradora — conflitos controlados podem reforçar coesão e identidade dos grupos.", "Defender que conflito só existe entre nações.", "Propor que conflito deve ser resolvido pela lei.", "Argumentar que conflito sempre destrói o grupo mais fraco."], g: "B", j: "Simmel ('O Conflito', 1908) vê o conflito como forma de socialização — não apenas destruição, mas criação de laços. Grupos que enfrentam um inimigo externo tendem a se unir internamente. Marx tende a ver o conflito de classe como ruptura estrutural." },
+      { q: "A 'pobreza multidimensional' vai além da renda porque:", alts: ["Inclui apenas desnutrição e mortalidade infantil.", "Considera múltiplas privações — educação, saúde, saneamento, segurança, participação política — que afetam o desenvolvimento humano.", "É exclusivamente aplicada a países em desenvolvimento.", "Só pode ser medida em contextos urbanos.", "Foi criada para substituir o Coeficiente de Gini."], g: "B", j: "O Índice de Pobreza Multidimensional (IPM, PNUD/Oxford) considera privações em saúde, educação e padrão de vida. Uma família pode ter renda acima da linha de pobreza mas ser pobre multidimensionalmente sem saneamento, escola de qualidade ou saúde." }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════════════════════════
+
+const state = {
+  current: 0,
+  tab: 'content',
+  scores: MATERIAS.map(m => ({ total: m.questoes.length, answered: 0, correct: 0 })),
+  answers: MATERIAS.map(m => Array(m.questoes.length).fill(null))
+};
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function renderNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = MATERIAS.map((m, i) => {
+    const sc = state.scores[i];
+    const done = sc.answered;
+    const pct = done > 0 ? Math.round((sc.correct / sc.answered) * 100) : null;
+    const scoreText = done > 0 ? `${sc.correct}/${sc.answered}` : '';
+    const scoreClass = done === sc.total && sc.correct === sc.total ? 'perfect' : '';
+    return `<div class="nav-item${i === state.current ? ' active' : ''}" onclick="selectMateria(${i})">
+      <span class="icon">${m.icon}</span>
+      <span style="flex:1">${m.nome}</span>
+      ${scoreText ? `<span class="nav-score ${scoreClass}">${scoreText}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function buildContent(m) {
+  return m.conteudo.map(sec => {
+    const items = sec.items.map(item => {
+      if (item.tipo === 'p') return `<p class="section-p">${item.txt}</p>`;
+      if (item.tipo === 'h3') return `<div class="section-h3">${item.txt}</div>`;
+      if (item.tipo === 'ex') return `<div class="example">${item.txt}</div>`;
+      if (item.tipo === 'ul') return `<ul class="bullet-list">${item.items.map(li => `<li>${li}</li>`).join('')}</ul>`;
+      return '';
+    }).join('');
+    return `<div class="section-block"><div class="section-h2">${sec.h2}</div>${items}</div>`;
+  }).join('');
+}
+
+function buildQuestions(mIdx) {
+  const m = MATERIAS[mIdx];
+  const sc = state.scores[mIdx];
+  const pct = sc.answered > 0 ? Math.round((sc.correct / sc.answered) * 100) : 0;
+  const barColor = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--accent)';
+
+  let html = `<div class="score-bar">
+    <div>
+      <div class="score-label">Acertos</div>
+      <div class="score-count">${sc.correct} <span>/ ${sc.total}</span></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:${sc.answered > 0 ? pct : 0}%;background:${barColor}"></div>
+    </div>
+    <button class="reset-btn" onclick="resetMateria(${mIdx})">Refazer</button>
+  </div>`;
+
+  m.questoes.forEach((q, qi) => {
+    const ans = state.answers[mIdx][qi];
+    const letters = ['A','B','C','D','E'];
+    const answered = ans !== null;
+    const correct = answered && letters[ans] === q.g;
+
+    html += `<div class="question-block${answered ? (correct ? ' answered-correct' : ' answered-wrong') : ''}" id="q-${mIdx}-${qi}">
+      <div class="question-num">Questão ${qi + 1}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="alternatives">`;
+
+    q.alts.forEach((alt, ai) => {
+      let cls = '';
+      if (answered) {
+        if (letters[ai] === q.g) cls = 'reveal-correct';
+        if (ai === ans && !correct) cls = 'wrong';
+        if (ai === ans && correct) cls = 'correct';
+      }
+      html += `<button class="alt-btn ${cls}" 
+        ${answered ? 'disabled' : `onclick="answer(${mIdx},${qi},${ai})"`}>
+        <span class="alt-letter">${letters[ai]}</span>
+        <span>${alt}</span>
+      </button>`;
+    });
+
+    html += `</div>`;
+
+    if (answered) {
+      html += `<div class="feedback ${correct ? 'correct' : 'wrong'} show">
+        <strong>${correct ? '✓ Correto!' : '✗ Incorreto'}</strong>
+        ${q.j}
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  return html;
+}
+
+function renderMain() {
+  const m = MATERIAS[state.current];
+  const mIdx = state.current;
+
+  document.getElementById('main').innerHTML = `
+    <div class="subject-subtitle">${m.icon} ${m.nome}</div>
+    <h1 class="subject-title">${m.topico}</h1>
+    <div class="tabs">
+      <div class="tab${state.tab === 'content' ? ' active' : ''}" onclick="switchTab('content')">📖 Conteúdo</div>
+      <div class="tab${state.tab === 'questions' ? ' active' : ''}" onclick="switchTab('questions')">✏️ Questões</div>
+    </div>
+    <div class="content${state.tab === 'content' ? ' visible' : ''}" id="tab-content">
+      ${buildContent(m)}
+    </div>
+    <div class="content${state.tab === 'questions' ? ' visible' : ''}" id="tab-questions">
+      ${buildQuestions(mIdx)}
+    </div>
+  `;
+}
+
+function render() {
+  renderNav();
+  renderMain();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AÇÕES
+// ═══════════════════════════════════════════════════════════════
+
+function selectMateria(i) {
+  state.current = i;
+  state.tab = 'content';
+  render();
+  document.getElementById('main').scrollTop = 0;
+  if (window.innerWidth <= 700) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+
+function switchTab(tab) {
+  state.tab = tab;
+  renderMain();
+}
+
+function answer(mIdx, qi, ai) {
+  if (state.answers[mIdx][qi] !== null) return;
+  state.answers[mIdx][qi] = ai;
+  const letters = ['A','B','C','D','E'];
+  const correct = letters[ai] === MATERIAS[mIdx].questoes[qi].g;
+  state.scores[mIdx].answered++;
+  if (correct) state.scores[mIdx].correct++;
+  renderNav();
+  // Rebuild apenas as questões sem recriar o main inteiro
+  document.getElementById('tab-questions').innerHTML = buildQuestions(mIdx);
+  // Scroll para a questão respondida
+  const el = document.getElementById(`q-${mIdx}-${qi}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetMateria(mIdx) {
+  state.scores[mIdx] = { total: MATERIAS[mIdx].questoes.length, answered: 0, correct: 0 };
+  state.answers[mIdx] = Array(MATERIAS[mIdx].questoes.length).fill(null);
+  renderNav();
+  document.getElementById('tab-questions').innerHTML = buildQuestions(mIdx);
+}
+
+function toggleMenu() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+
+render();
+</script>
+</body>
+</html>
